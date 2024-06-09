@@ -15,6 +15,13 @@ spring:
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookies
+        - id: users-create
+          uri: lb://users-ws
+          predicates:
+            - Path=/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookies
       discovery:
         locator:
           enabled: true
