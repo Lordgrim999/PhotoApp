@@ -23,3 +23,6 @@ eureka:
       defaultZone: http://localhost:8010/eureka
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance-id:${random.value}}
+
+gateway:
+  ip: 192.168.1.12
