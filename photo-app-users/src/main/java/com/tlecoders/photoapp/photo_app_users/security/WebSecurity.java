@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,6 +26,14 @@ public class WebSecurity {
     }
     @Bean
     protected SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
+        //configuring authentication manager
+        AuthenticationManagerBuilder authenticationManagerBuilder= httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
+
+        //by calling this method I can tell spring framework which service class will contain method to
+        //look up user details in database
+        //authenticationManagerBuilder.userDetailsService();
+        AuthenticationManager authenticationManager=authenticationManagerBuilder.build();
+
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize ->
@@ -33,6 +43,8 @@ public class WebSecurity {
                                 .anyRequest().authenticated()
 
                 )
+                .addFilter(new AuthenticationFilter(authenticationManager))
+                .authenticationManager(authenticationManager)
                 .headers(header->header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
