@@ -1,8 +1,8 @@
 package com.tlecoders.photoapp.photo_app_users.security;
 
+import com.tlecoders.photoapp.photo_app_users.service.UsersService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,18 +11,25 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurity {
 
-    Environment environment;
-    public WebSecurity(Environment environment)
+
+    private final UsersService usersService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
+    public WebSecurity(UsersService usersService, BCryptPasswordEncoder bCryptPasswordEncoder)
     {
-        this.environment=environment;
+
+        this.usersService = usersService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+
     }
     @Bean
     protected SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
@@ -31,14 +38,15 @@ public class WebSecurity {
 
         //by calling this method I can tell spring framework which service class will contain method to
         //look up user details in database
-        //authenticationManagerBuilder.userDetailsService();
+        authenticationManagerBuilder.userDetailsService(usersService)
+                .passwordEncoder(bCryptPasswordEncoder);
         AuthenticationManager authenticationManager=authenticationManagerBuilder.build();
 
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(HttpMethod.POST,"/users").
-                                access(new WebExpressionAuthorizationManager("hasIpAddress('"+environment.getProperty("gateway.ip")+"')"))
+                                permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
                                 .anyRequest().authenticated()
 

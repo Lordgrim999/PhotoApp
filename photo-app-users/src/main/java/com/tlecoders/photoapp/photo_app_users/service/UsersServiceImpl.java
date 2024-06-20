@@ -1,15 +1,18 @@
 package com.tlecoders.photoapp.photo_app_users.service;
 
 import com.tlecoders.photoapp.photo_app_users.entity.UserEntity;
-import com.tlecoders.photoapp.photo_app_users.model.User;
 import com.tlecoders.photoapp.photo_app_users.repository.UserRepository;
 import com.tlecoders.photoapp.photo_app_users.shared.UsersDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MatchingStrategy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Service
@@ -31,5 +34,15 @@ public class UsersServiceImpl implements UsersService{
         user.setEncryptedPassword(bCryptPasswordEncoder.encode(userDetails.getPassword()));
        return modelMapper.map(userRepository.save(user),UsersDTO.class);
 
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepository.findByEmail(username);
+        if(userEntity==null)
+            throw new UsernameNotFoundException(username);
+
+        return new User(userEntity.getEmail(),userEntity.getEncryptedPassword(),true,true,
+                true,true,new ArrayList<>());
     }
 }
