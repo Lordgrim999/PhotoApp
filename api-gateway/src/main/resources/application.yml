@@ -11,17 +11,27 @@ spring:
         - id: users-status-check
           uri: lb://users-ws
           predicates:
-            - Path=/users/status
+            - Path=/users-ws/users/status
             - Method=GET
           filters:
             - RemoveRequestHeader=Cookies
+            - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
         - id: users-create
           uri: lb://users-ws
           predicates:
-            - Path=/users
+            - Path=/users-ws/users
             - Method=POST
           filters:
             - RemoveRequestHeader=Cookies
+            - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+        - id: users-login
+          uri: lb://users-ws
+          predicates:
+            - Path=/users-ws/login
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookies
+            - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
       discovery:
         locator:
           enabled: true
