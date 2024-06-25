@@ -13,9 +13,11 @@ spring:
           predicates:
             - Path=/users-ws/users/status
             - Method=GET
+            - Header=Authorization, Bearer (.*)
           filters:
             - RemoveRequestHeader=Cookies
             - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
         - id: users-create
           uri: lb://users-ws
           predicates:
