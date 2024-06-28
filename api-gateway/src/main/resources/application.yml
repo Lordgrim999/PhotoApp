@@ -5,6 +5,8 @@ spring:
   devtools:
     restart:
       enabled: true
+  config:
+    import: optional:configserver:http://localhost:8012
   cloud:
     gateway:
       routes:
@@ -39,7 +41,3 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8010/eureka
-
-token:
-  expiration_time: 3600000
-  secret: qma78k1bkp48xzbd6vczrwutxa4ueg1uzm2ukrdk9ssrozg88v

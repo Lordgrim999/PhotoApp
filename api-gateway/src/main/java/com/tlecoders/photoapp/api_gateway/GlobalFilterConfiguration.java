@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 @Configuration
 public class GlobalFilterConfiguration {
-     private Logger log= LoggerFactory.getLogger(GlobalFilterConfiguration.class);
+     private final Logger log= LoggerFactory.getLogger(GlobalFilterConfiguration.class);
 
      @Bean
      @Order(1)

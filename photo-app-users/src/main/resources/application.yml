@@ -16,6 +16,8 @@ spring:
     driverClassName: org.h2.driver
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+  config:
+    import: optional:configserver:http://localhost:8012
 
 eureka:
   client:
@@ -26,6 +28,3 @@ eureka:
 
 gateway:
   ip: 192.168.1.12
-token:
-  expiration_time: 3600000
-  secret: qma78k1bkp48xzbd6vczrwutxa4ueg1uzm2ukrdk9ssrozg88v

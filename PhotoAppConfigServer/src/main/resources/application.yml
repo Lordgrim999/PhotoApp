@@ -1,0 +1,15 @@
+server:
+  port: 8012
+
+spring:
+  application:
+    name: PhotoAppConfigServer
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Lordgrim999/PhotoAppConfiguration
+          username: Lordgrim999
+          password: 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
+          clone-on-start: true
+          default-label: main
