@@ -5,7 +5,9 @@ management:
   endpoints:
     web:
       exposure:
-        includes: busrefresh
+        include: busrefresh
+
+
 spring:
   application:
     name: PhotoAppConfigServer
@@ -15,6 +17,11 @@ spring:
         git:
           uri: https://github.com/Lordgrim999/PhotoAppConfiguration
           username: Lordgrim999
-          password: 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
+          password: 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
           clone-on-start: true
           default-label: main
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest

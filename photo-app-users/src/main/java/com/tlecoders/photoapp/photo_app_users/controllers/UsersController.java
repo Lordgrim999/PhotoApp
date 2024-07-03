@@ -10,6 +10,7 @@ import org.apache.http.protocol.HTTP;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,13 @@ public class UsersController {
     @Autowired
     UsersServiceImpl usersService;
 
+    @Autowired
+    Environment environment;
+
     @GetMapping("/status")
     public String status()
     {
-        return "Working";
+        return "Working and the secret is "+environment.getProperty("token.secret");
     }
 
     @PostMapping
